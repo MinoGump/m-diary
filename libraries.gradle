@@ -1,0 +1,23 @@
+ext {
+    springVersion = '4.3.14.RELEASE'
+    springDataJpaVersion = '1.11.10.RELEASE'
+    lombokVersion = '1.16.20'
+    mybatisSpringVersion = '1.3.2'
+    mybatisVersion = '3.3.0'
+    mysqlVersion = '6.0.6'
+    c3p0Version = '0.9.5.2'
+    servletApiVersion = '3.1.0'
+
+    libraries = [
+            spring_core         : "org.springframework:spring-core:${springVersion}",
+            spring_webmvc       : "org.springframework:spring-webmvc:${springVersion}",
+            spring_aop          : "org.springframework:spring-aop:${springVersion}",
+            spring_jdbc         : "org.springframework:spring-jdbc:${springVersion}",
+            spring_data_jpa     : "org.springframework.data:spring-data-jpa:${springDataJpaVersion}",
+            mybatis_spring      : "org.mybatis:mybatis-spring:${mybatisSpringVersion}",
+            mybatis             : "org.mybatis:mybatis:${mybatisVersion}",
+            mysql               : "mysql:mysql-connector-java:${mysqlVersion}",
+            c3p0                : "com.mchange:c3p0:${c3p0Version}",
+            servlet_api         : "javax.servlet:javax.servlet-api:${servletApiVersion}"
+    ]
+}
