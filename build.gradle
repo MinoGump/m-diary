@@ -25,4 +25,5 @@ dependencies {
     compile(libraries.mysql)
     compile(libraries.c3p0)
     compile(libraries.servlet_api)
+    compile(libraries.apache_lang)
 }
