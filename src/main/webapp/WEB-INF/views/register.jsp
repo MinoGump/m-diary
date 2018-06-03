@@ -10,18 +10,19 @@
   <head>
     <title>注册</title>
   </head>
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript">
-    $().ready(
+    $(document).ready(
         function (){
             $("#sub").click(
                 function () {
-                    var name = $("#username").val();
-                    var password = $("password").val();
+                    var name = $('#username').val();
+                    var password = $('#password').val();
                     var user = {"username":name,"password":password};
                     $.ajax({
                         url : 'register',
                         type : 'POST',
-                        data : JSON.stringify(user), // Request body
+                        data : {"user": JSON.stringify(user)}, // Request body
                         contentType : 'application/json; charset=utf-8',
                         dataType : 'json',
                         success : function(response) {
@@ -38,7 +39,7 @@
     );
   </script>
   <body>
-  <form action="${baseController.register}" method="post">
+  <form action="register", method="post">
     <input type="text" name="账号" id="username">
     <input type="text" name="密码" id="password">
     <input type="text" name="密码确认" id="password_again">

@@ -2,11 +2,28 @@ package com.mino.mdiary.exercise.java.algorithm;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
 public class MajorElementOfArray {
 
     public static void main(String[] args) {
-        int[] array ={3,2,2,5,2,3,2,4,2};
-        System.out.println(getMajorElementOfArray(array));
+        List<Integer> array = Arrays.stream(new Random().ints(101).toArray()).boxed().collect(Collectors.toList());
+
+        long starttime = System.nanoTime();
+        System.out.println("start Method 1 : " + starttime);
+        System.out.println(getMajorElementOfArray(array.toArray(new Integer[array.size()])));
+        long endtime = System.nanoTime();
+        System.out.println("end Method 1 : " + endtime + "  and cost : " + (endtime - starttime));
+
+        starttime = System.nanoTime();
+        System.out.println("start Method 2 : " + starttime);
+        System.out.println(getMajorElementOfArrayRecursively(array));
+        endtime = System.nanoTime();
+        System.out.println("end Method 2 : " + endtime + "  and cost : " + (endtime - starttime));
     }
 
     /**
@@ -14,7 +31,7 @@ public class MajorElementOfArray {
      * @param array
      * @return
      */
-    public static int getMajorElementOfArray(int[] array) {
+    public static int getMajorElementOfArray(Integer[] array) {
         int res = Integer.MIN_VALUE;
         if (ArrayUtils.isEmpty(array)) {
             return res;
@@ -36,5 +53,20 @@ public class MajorElementOfArray {
             }
         }
         return res;
+    }
+
+    public static int getMajorElementOfArrayRecursively(List<Integer> array) {
+        if (array.size() == 1) {
+            return array.get(0);
+        }
+        List<Integer> newArray = new ArrayList<>();
+        for (int i = 0; i < array.size(); i += 2) {
+            if (i + 1 < array.size() && array.get(i).equals(array.get(i + 1))) {
+                newArray.add(array.get(i));
+            } else if (i + 1 == array.size()) {
+                newArray.add(array.get(i));
+            }
+        }
+        return getMajorElementOfArrayRecursively(newArray);
     }
 }

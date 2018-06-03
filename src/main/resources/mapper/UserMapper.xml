@@ -3,8 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
 <mapper namespace="com.mino.mdiary.repository.UserRepository">
-    
+
+    <sql id="BASE_COLUMN">
+        id as id,
+        username as username,
+        password as password,
+        nickname as nickname,
+        avatar as avatar,
+        create_time as createTime,
+        update_time as updateTime,
+        is_deleted as isDeleted
+    </sql>
+
     <insert id="insertUser" parameterType="com.mino.mdiary.entity.User" useGeneratedKeys="true" keyColumn="id">
         INSERT INTO user
         <trim prefix="SET" suffixOverrides=",">
@@ -28,4 +40,10 @@
             </if>
         </trim>
     </insert>
+
+    <select id="getUserByUsername" parameterType="java.lang.String" resultType="com.mino.mdiary.entity.User">
+        SELECT <include refid="BASE_COLUMN"/>
+        FROM USER
+        WHERE username = #{username}
+    </select>
 </mapper>
