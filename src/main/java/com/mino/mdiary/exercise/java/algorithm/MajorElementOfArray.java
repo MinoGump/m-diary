@@ -3,7 +3,7 @@ package com.mino.mdiary.exercise.java.algorithm;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -11,7 +11,10 @@ import java.util.stream.Collectors;
 public class MajorElementOfArray {
 
     public static void main(String[] args) {
-        List<Integer> array = Arrays.stream(new Random().ints(101).toArray()).boxed().collect(Collectors.toList());
+        List<Integer> array = new Random().ints(100, 0, 200).boxed().collect(Collectors.toList());
+        array.addAll(new Random().ints(100, array.get(0), array.get(0) + 1).boxed().collect(Collectors.toList()));
+        Collections.shuffle(array);
+        System.out.println(array);
 
         long starttime = System.nanoTime();
         System.out.println("start Method 1 : " + starttime);
