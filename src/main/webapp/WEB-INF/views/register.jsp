@@ -22,7 +22,7 @@
                     $.ajax({
                         url : 'register',
                         type : 'POST',
-                        data : {"user": JSON.stringify(user)}, // Request body
+                        data : JSON.stringify(user), // Request body
                         contentType : 'application/json; charset=utf-8',
                         dataType : 'json',
                         success : function(response) {
@@ -39,11 +39,21 @@
     );
   </script>
   <body>
-  <form action="register", method="post">
-    <input type="text" name="账号" id="username">
-    <input type="text" name="密码" id="password">
-    <input type="text" name="密码确认" id="password_again">
-    <button type="submit" name="注册" id="sub"></button>
+  <form action="">
+    账号：<input type="text" name="username" id="username"><br/>
+    密码：<input type="text" name="password" id="password"><br/>
+    密码确认：<input type="text" name="password" id="password_again"><br/>
+    提交<button type="submit" name="register" id="sub"></button>
+  </form>
+
+  <br/>
+  <br/>
+
+  <form action="/register1" method="post" enctype="application/x-www-form-urlencoded">
+    账号：<input type="text" name="username" id="username1"><br/>
+    密码：<input type="text" name="password" id="password1"><br/>
+    密码确认：<input type="text" name="password_again" id="password_again1"><br/>
+    提交<button type="submit" name="register" id="sub1"></button>
   </form>
   </body>
 </html>

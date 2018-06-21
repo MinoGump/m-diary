@@ -19,6 +19,7 @@ ext {
             mysql               : "mysql:mysql-connector-java:${mysqlVersion}",
             c3p0                : "com.mchange:c3p0:${c3p0Version}",
             servlet_api         : "javax.servlet:javax.servlet-api:${servletApiVersion}",
-            apache_lang         : "org.apache.commons:commons-lang3:3.4"
+            apache_lang         : "org.apache.commons:commons-lang3:3.4",
+            fastjson            : "com.alibaba:fastjson:1.2.47"
     ]
 }
