@@ -2,6 +2,7 @@ package com.mino.mdiary.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.mino.mdiary.entity.User;
+import com.mino.mdiary.entity.vo.ResponseInfo;
 import com.mino.mdiary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,7 @@ public class BaseController {
     public String register(@RequestBody String body, HttpServletRequest request, HttpServletResponse response) {
         try {
             User user = JSON.parseObject(URLDecoder.decode(body, "utf-8"), User.class);
-            boolean success = userService.initializeUser(user);
+            ResponseInfo success = userService.initializeUser(user);
         } catch (Exception e) {
             e.printStackTrace();
         }

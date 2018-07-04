@@ -2,7 +2,6 @@ package com.mino.mdiary.exercise.java.algorithm;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -10,23 +9,37 @@ import java.util.stream.Collectors;
 
 public class MajorElementOfArray {
 
+    private static long startTime = 0L;
+    private static long endTime = 0L;
+    private static long startMem = 0L;
+    private static long endMem = 0L;
+
     public static void main(String[] args) {
         List<Integer> array = new Random().ints(100, 0, 200).boxed().collect(Collectors.toList());
         array.addAll(new Random().ints(100, array.get(0), array.get(0) + 1).boxed().collect(Collectors.toList()));
         Collections.shuffle(array);
         System.out.println(array);
 
-        long starttime = System.nanoTime();
-        System.out.println("start Method 1 : " + starttime);
+        Runtime run = Runtime.getRuntime();
+        startTime = System.nanoTime();
+        startMem = run.totalMemory() - run.freeMemory();
+        System.out.println("start Method 1, time : " + startTime + " , mem : " + startMem);
         System.out.println(getMajorElementOfArray(array.toArray(new Integer[array.size()])));
-        long endtime = System.nanoTime();
-        System.out.println("end Method 1 : " + endtime + "  and cost : " + (endtime - starttime));
+        endTime = System.nanoTime();
+        endMem = run.totalMemory() - run.freeMemory();
+        System.out.println("end Method 1, time : " + endTime + " , mem : " + endMem);
+        System.out.println("cost : " + (endTime - startTime) + " , " + (endMem - startMem));
 
-        starttime = System.nanoTime();
-        System.out.println("start Method 2 : " + starttime);
-        System.out.println(getMajorElementOfArrayRecursively(array));
-        endtime = System.nanoTime();
-        System.out.println("end Method 2 : " + endtime + "  and cost : " + (endtime - starttime));
+        System.out.println("");
+
+        startTime = System.nanoTime();
+        startMem = run.totalMemory() - run.freeMemory();
+        System.out.println("start Method 2, time : " + startTime + " , mem : " + startMem);
+        System.out.println(getMajorElementOfArrayRecursively(array.toArray(new Integer[array.size()]), array.size()));
+        endMem = run.totalMemory() - run.freeMemory();
+        endTime = System.nanoTime();
+        System.out.println("end Method 2, time : " + endTime + " , mem : " + endMem);
+        System.out.println("cost : " + (endTime - startTime) + " , " + (endMem - startMem));
     }
 
     /**
@@ -58,18 +71,19 @@ public class MajorElementOfArray {
         return res;
     }
 
-    public static int getMajorElementOfArrayRecursively(List<Integer> array) {
-        if (array.size() == 1) {
-            return array.get(0);
+    public static int getMajorElementOfArrayRecursively(Integer[] array, int length) {
+        if (length == 1) {
+            return array[0];
         }
-        List<Integer> newArray = new ArrayList<>();
-        for (int i = 0; i < array.size(); i += 2) {
-            if (i + 1 < array.size() && array.get(i).equals(array.get(i + 1))) {
-                newArray.add(array.get(i));
-            } else if (i + 1 == array.size()) {
-                newArray.add(array.get(i));
+        Integer[] newArray = new Integer[length/2 + 1];
+        int j = 0;
+        for (int i = 0; i < length; i += 2) {
+            if (i + 1 < length && array[i].equals(array[i + 1])) {
+                newArray[j++] = array[i];
+            } else if (i + 1 == length) {
+                newArray[j++] = array[i];
             }
         }
-        return getMajorElementOfArrayRecursively(newArray);
+        return getMajorElementOfArrayRecursively(newArray, j);
     }
 }
