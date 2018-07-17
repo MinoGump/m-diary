@@ -1,3 +1,5 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: minogump
@@ -12,48 +14,61 @@
   </head>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript">
-    $(document).ready(
-        function (){
-            $("#sub").click(
-                function () {
+    $(document).ready(function (){
+            $('#loginform').submit(function (event) {
+                event.preventDefault();
+                ajaxPost();
+            });
+
+
+            function ajaxPost(){
                     var name = $('#username').val();
                     var password = $('#password').val();
                     var user = {"username":name,"password":password};
                     $.ajax({
+                        headers: {
+                            "content-Type":"application/json",
+                            'Accept': 'application/json',
+                        },
                         url : 'register',
                         type : 'POST',
-                        data : JSON.stringify(user), // Request body
-                        contentType : 'application/json; charset=utf-8',
+                        data : JSON.stringify(user),
                         dataType : 'json',
                         success : function(response) {
                             //请求成功
-                            alert("你好" + response.username + "，当前时间是：" + response.time + "，欢迎访问：http://www.m-diary.cn");
-                        },
-                        error : function(msg) {
-                            alert(msg);
+                            alert("success");
                         }
                     })
                 }
-            )
         }
     );
   </script>
   <body>
-  <form action="">
-    账号：<input type="text" name="username" id="username"><br/>
-    密码：<input type="text" name="password" id="password"><br/>
-    密码确认：<input type="text" name="password" id="password_again"><br/>
-    提交<button type="submit" name="register" id="sub"></button>
-  </form>
+  <div>
+    <form id="loginform" action="/register" method="post">
+      <table>
+        <tr>
+          <td>账号：<input type="text" name="username" id="username" value="${userPojo.username}"></td>
+          <td>密码：<input type="text" name="password" id="password" value="${userPojo.password}"></td>
+          <td>密码确认：<input type="text" name="password" id="password_again"></td>
+          <td>提交<button type="submit" name="register" id="sub"></button></td>
+        </tr>
+      </table>
+    </form>
 
-  <br/>
-  <br/>
-
-  <form action="/register1" method="post" enctype="application/x-www-form-urlencoded">
-    账号：<input type="text" name="username" id="username1"><br/>
-    密码：<input type="text" name="password" id="password1"><br/>
-    密码确认：<input type="text" name="password_again" id="password_again1"><br/>
-    提交<button type="submit" name="register" id="sub1"></button>
-  </form>
+    <form:form action="/register" method="post" modelAttribute="user">
+      <table>
+        <tr>
+          <spring:bind path="username">
+            <td>账号：<form:input path="username"/></td>
+          </spring:bind>
+          <spring:bind path="password">
+            <td>密码：<form:input path="password"/></td>
+          </spring:bind>
+          <td>提交 <input type="submit"/></td>
+        </tr>
+      </table>
+    </form:form>
+  </div>
   </body>
 </html>
