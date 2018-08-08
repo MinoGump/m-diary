@@ -1,5 +1,6 @@
 package com.mino.mdiary.exercise.java.dsaa.chapter1;
 
+import org.junit.Test;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -7,7 +8,8 @@ import java.util.Arrays;
 @Component
 public class Test1_14 {
 
-    public String test_1_14() {
+    @Test
+    public void test_1_14() {
         Integer[] min = {1,2,3,5,7,3};
         OrderedCollection<Integer> collection = new OrderedCollection<>(min);
         System.out.println(collection.isEmpty());
@@ -19,7 +21,6 @@ public class Test1_14 {
 
         System.out.println(collection.findMin());
         System.out.println(collection.findMax());
-        return "";
     }
 
     class OrderedCollection<T extends Comparable<? super T>> {
