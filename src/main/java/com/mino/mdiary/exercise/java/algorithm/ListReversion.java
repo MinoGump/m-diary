@@ -2,9 +2,6 @@ package com.mino.mdiary.exercise.java.algorithm;
 
 import org.junit.Test;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class ListReversion {
 
     @Test
@@ -68,7 +65,6 @@ public class ListReversion {
     class ListNode {
         int val;
         ListNode next;
-
 
         ListNode(int value) {
             val = value;

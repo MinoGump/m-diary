@@ -60,12 +60,9 @@ public class GetRightNodeOfTree {
         if (currentDepth > maxDepth) {
             maxDepth = currentDepth;
             resultNodes.add(node);
-            maxDepth = getRightNode(node.right, currentDepth+1, maxDepth, resultNodes);
-            maxDepth = getRightNode(node.left, currentDepth+1, maxDepth, resultNodes);
-        } else {
-            maxDepth = getRightNode(node.right, currentDepth + 1, maxDepth, resultNodes);
-            maxDepth = getRightNode(node.left, currentDepth+1, maxDepth, resultNodes);
         }
+        maxDepth = getRightNode(node.right, currentDepth+1, maxDepth, resultNodes);
+        maxDepth = getRightNode(node.left, currentDepth+1, maxDepth, resultNodes);
         return maxDepth;
     }
 
