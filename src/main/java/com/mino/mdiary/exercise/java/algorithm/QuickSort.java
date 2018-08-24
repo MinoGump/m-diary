@@ -1,11 +1,6 @@
 package com.mino.mdiary.exercise.java.algorithm;
 
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class QuickSort {
 
 
@@ -29,8 +24,6 @@ public class QuickSort {
 
     private static int partition(int[] array, int left, int right) {
         int pivot = array[left];
-        Queue<Integer> queue = new LinkedList<>();
-        Deque<Integer> deque = new ArrayDeque<>();
         while (left < right) {
             while (left < right && array[right] >= pivot) {
                 right--;

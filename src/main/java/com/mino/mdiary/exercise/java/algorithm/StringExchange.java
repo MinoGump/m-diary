@@ -57,6 +57,7 @@ public class StringExchange {
         return new String(chars);
     }
 
+    /* 复杂度 O(n/2) */
     private void exchange(char[] chars, int begin, int end) {
         while (begin < end) {
             swap(chars, begin, end);

@@ -68,7 +68,6 @@ public class MultiThreadPrint {
         A.start();
         B.start();
         C.start();
-        int a = System.in.read();
     }
 
     class AThread implements Runnable {
