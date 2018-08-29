@@ -5,9 +5,9 @@ import java.lang.reflect.Method;
 
 public class UserProxy implements InvocationHandler {
 
-    private Object target;
+    private IUser target;
 
-    public UserProxy(Object target) {
+    public UserProxy(IUser target) {
         this.target = target;
     }
 
@@ -16,10 +16,14 @@ public class UserProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         System.out.println("=== before eating");
 
-        Object result = method.invoke(target, args);
+        if (method.getName().equals("print")) {
+            int result = target.getInteger();
+            System.out.println(result);
+        }
 
         System.out.println("=== after eating");
 
-        return result;
+
+        return null;
     }
 }
