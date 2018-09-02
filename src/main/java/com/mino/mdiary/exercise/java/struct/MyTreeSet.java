@@ -46,7 +46,7 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
     }
 
     public void insert(AnyType x) {
-        root = insert(x, root);
+        root = insert(x, root, null);
     }
 
     public void remove(AnyType x) {
@@ -163,15 +163,15 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
         return root;
     }
 
-    private BNode<AnyType> insert(AnyType x, BNode<AnyType> root) {
+    private BNode<AnyType> insert(AnyType x, BNode<AnyType> root, BNode<AnyType> parent) {
         if (root == null) {
-            return new BNode<AnyType>(null, null, null, x);
+            return new BNode<>(parent, null, null, x);
         }
         int compareResult = x.compareTo(root.ele);
         if (compareResult < 0) {
-            root.left = insert(x, root.left);
+            root.left = insert(x, root.left, root);
         } else if (compareResult > 0) {
-            root.right = insert(x, root.right);
+            root.right = insert(x, root.right, root);
         } else {
             // do nothing
         }
@@ -220,4 +220,29 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
         printTree(stringQueue, nextLevel);
     }
 
+
+    public static void main(String[] args) {
+        MyTreeSet<Integer> binarySearchTree = new MyTreeSet<>();
+        binarySearchTree.insert(4);
+        binarySearchTree.insert(6);
+        binarySearchTree.insert(2);
+        binarySearchTree.insert(3);
+        binarySearchTree.insert(1);
+        binarySearchTree.insert(8);
+        binarySearchTree.insert(5);
+        binarySearchTree.remove(3);
+
+        binarySearchTree.insert(3);
+        binarySearchTree.printTree();
+
+        Iterator<Integer> iterator = binarySearchTree.iterator();
+        while (iterator.hasNext()) {
+            System.out.print(iterator.next());
+        }
+        System.out.println();
+        iterator = binarySearchTree.iterator();
+        iterator.forEachRemaining(each -> {
+            System.out.print(each.intValue());
+        });
+    }
 }
