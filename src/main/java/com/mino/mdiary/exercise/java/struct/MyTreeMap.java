@@ -19,6 +19,9 @@ public class MyTreeMap<K extends Comparable<? super K>, V> implements Map<K, V> 
         }
     };
 
+    /**
+     * 这里完全可以延迟初始化，即在insert的时候判断treeSet是否为空，若为空，则初始化之
+     */
     public MyTreeMap() {
         treeSet = new TreeSet<>(COMPARABLE_FUNCTION);
     }

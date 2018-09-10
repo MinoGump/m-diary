@@ -4,16 +4,17 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * 实现一颗TreeSet，它的迭代器是一个二叉查找树，且每个树节点都存储它的父节点
+ * 实现一颗TreeSet，它的迭代器是一个二叉查找树，且每个树节点都存储它的前驱链和后继链
  */
-public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
+public class MyTreeSet1<AnyType extends Comparable<? super AnyType>> {
 
     private BNode<AnyType> root;
     private int modCount = 0;
     private AnyType min;        // 删除当前node下的最小值存储用
 
     private static class BNode<AnyType> {
-        BNode<AnyType> parent;
+        BNode<AnyType> lt;
+        BNode<AnyType> gt;
         BNode<AnyType> left;
         BNode<AnyType> right;
         AnyType ele;
@@ -22,11 +23,12 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
         }
 
         public BNode(AnyType element) {
-            this(null, null, null, element);
+            this(null, null, null, null, element);
         }
 
-        public BNode(BNode<AnyType> parent, BNode<AnyType> left, BNode<AnyType> right, AnyType ele) {
-            this.parent = parent;
+        public BNode(BNode<AnyType> lt, BNode<AnyType> gt, BNode<AnyType> left, BNode<AnyType> right, AnyType ele) {
+            this.lt = lt;
+            this.gt = gt;
             this.left = left;
             this.right = right;
             this.ele = ele;
@@ -46,11 +48,11 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
     }
 
     public void insert(AnyType x) {
-        root = insert(x, root, null);
+        root = insert(x, root, null, null);
     }
 
     public void remove(AnyType x) {
-        root = remove(x, root, null);
+        root = remove(x, root);
     }
 
     public void printTree() {
@@ -61,6 +63,15 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
         Queue<String> stringQueue = new LinkedList<>();
         queue.add(root);
         printTree(stringQueue, queue);
+    }
+
+    public void printFromLToR() {
+        BNode<AnyType> minNode = findMin(root);
+
+        while (minNode != null) {
+            System.out.printf(minNode.ele.toString());
+            minNode = minNode.gt;
+        }
     }
 
     public Iterator<AnyType> iterator() {
@@ -82,7 +93,7 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
             if (!readyToRemove) {
                 throw new IllegalStateException();
             }
-            MyTreeSet.this.remove(previous.ele, root, null);
+            MyTreeSet1.this.remove(previous.ele, root);
             readyToRemove = false;
         }
 
@@ -109,18 +120,10 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
             }
             AnyType ele = current.ele;
             previous = current;
-            if (current.right != null) {
-                current = findMin(current.right);
+            if (current.gt != null) {
+                current = current.gt;
             } else {
-                BNode<AnyType> child = current;
-                current = current.parent;
-                //可以找到一个祖先，且最初的current节点在这个祖先的左子树
-                while (current != null && current.left != child) {
-                    child = current;
-                    current = current.parent;
-                }
-                if (current == null)//这里很有可能是，在到了最右点，一直执行上面循环到了根节点，然后根节点没有父节点，设置为true
-                    atEnd = true;
+                atEnd = true;
             }
             readyToRemove = true;
             return ele;
@@ -137,58 +140,75 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
         return node;
     }
 
-    private BNode<AnyType> remove(AnyType element, BNode<AnyType> node, BNode<AnyType> parent) {
+    private BNode<AnyType> remove(AnyType element, BNode<AnyType> node) {
         if (node == null) return null;
         int compareResult = element.compareTo(node.ele);
         if (compareResult < 0) {
-            node.left = remove(element, node.left, node);
+            node.left = remove(element, node.left);
         } else if (compareResult > 0) {
-            node.right = remove(element, node.right, node);
+            node.right = remove(element, node.right);
         } else if (node.left != null && node.right != null) {
-            BNode<AnyType> rightNode = removeMin(node.right, parent);
+            BNode<AnyType> lt = node.lt;
+            BNode<AnyType> gt = node.gt;
+            node.right = removeMin(node.right);
             node.ele = min;
-            node.parent = parent;
-            node.right = rightNode;
-            if (rightNode != null) rightNode.parent = node;
+            lt.gt = gt;
+            gt.lt = lt;
         } else {
+            BNode<AnyType> lt = node.lt;
+            BNode<AnyType> gt = node.gt;
+            lt.gt = gt;
+            gt.lt = lt;
             node = node.left != null ? node.left : node.right;
         }
         return node;
     }
 
-    private BNode<AnyType> removeMin(BNode<AnyType> root, BNode<AnyType> parent) {
+//    private BNode<AnyType> remove(BNode<AnyType> node) {
+//        if (node == null) return null;
+//        if (node.left != null && node.right != null) {
+//            node.right = removeMin(node);
+//            node.ele = min;
+//        } else {
+//            node = node.left != null ? node.left : node.right;
+//        }
+//        return node;
+//    }
+
+    private BNode<AnyType> removeMin(BNode<AnyType> root) {
         if (root == null) return null;
-        // 当前节点已经为最小值，需要删除
         if (root.left == null) {
             min = root.ele;
-            if (parent != null) {
-                // 如果 parent的左节点为root，则将parent.left 链到 root.right 去
-                if (isLeftChild(parent, root)) {
-                    parent.left = root.right;
-                } else {
-                    parent.right = root.right;
-                }
-            }
-            if (root.right != null) root.right.parent = parent;
             return root.right;
         }
-        root.left = removeMin(root.left, root);
+        root.left = removeMin(root.left);
         return root;
     }
 
-    private BNode<AnyType> insert(AnyType x, BNode<AnyType> root, BNode<AnyType> parent) {
-        if (root == null) {
-            return new BNode<>(parent, null, null, x);
+    private BNode<AnyType> insert(AnyType x, BNode<AnyType> node, BNode<AnyType> maxLt, BNode<AnyType> minGt) {
+        if (node == null) {
+            BNode<AnyType> resultNode = new BNode<>(maxLt, minGt, null, null, x);
+            if (maxLt != null) {
+                maxLt.gt = resultNode;
+            }
+            if (minGt != null) {
+                minGt.lt = resultNode;
+            }
+            return resultNode;
         }
-        int compareResult = x.compareTo(root.ele);
+        int compareResult = x.compareTo(node.ele);
         if (compareResult < 0) {
-            root.left = insert(x, root.left, root);
+            if (minGt != null && minGt.ele.compareTo(node.ele) > 0) minGt = node;
+            else if (minGt == null && node.ele.compareTo(x) > 0) minGt = node;
+            node.left = insert(x, node.left, maxLt, minGt);
         } else if (compareResult > 0) {
-            root.right = insert(x, root.right, root);
+            if (maxLt != null && maxLt.ele.compareTo(node.ele) < 0) maxLt = node;
+            else if (maxLt == null && node.ele.compareTo(x) < 0) maxLt = node;
+            node.right = insert(x, node.right, maxLt, minGt);
         } else {
             // do nothing
         }
-        return root;
+        return node;
     }
 
     private boolean contains(AnyType x, BNode<AnyType> root) {
@@ -233,6 +253,7 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
         printTree(stringQueue, nextLevel);
     }
 
+
     /**
      * 判断node1 的左节点是否为 node2
      * @param node1
@@ -245,13 +266,13 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
 
 
     public static void main(String[] args) {
-        MyTreeSet<Integer> binarySearchTree = new MyTreeSet<>();
+        MyTreeSet1<Integer> binarySearchTree = new MyTreeSet1<>();
         binarySearchTree.insert(4);
         binarySearchTree.insert(6);
         binarySearchTree.insert(2);
         binarySearchTree.insert(3);
-        binarySearchTree.remove(4);
         binarySearchTree.insert(1);
+        binarySearchTree.remove(3);
         binarySearchTree.insert(8);
         binarySearchTree.insert(5);
 
@@ -267,5 +288,8 @@ public class MyTreeSet<AnyType extends Comparable<? super AnyType>> {
         iterator.forEachRemaining(each -> {
             System.out.print(each.intValue());
         });
+
+        binarySearchTree.printTree();
+        binarySearchTree.printFromLToR();
     }
 }
